@@ -39,10 +39,10 @@ export default function Login() {
     if (error) {
       toast.error(error.message === 'Invalid login credentials' ? 'Wrong email or password' : error.message);
     } else if (data.user) {
-      // Hydrate store immediately so AuthGuard doesn't redirect back to login
+      // Hydrate store immediately so AuthGuard lets us through
       setUser(data.user);
       setSession(data.session);
-      await fetchProfile(data.user.id);
+      try { await fetchProfile(data.user.id); } catch { /* profile fetch failure should not block navigation */ }
       navigate('/dashboard', { replace: true });
     }
   };

@@ -48,7 +48,7 @@ export default function Register() {
     ev.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email: form.email,
       password: form.password,
       options: {
@@ -64,21 +64,25 @@ export default function Register() {
     if (error) {
       toast.error(error.message);
     } else {
-      const { data: { session } } = await supabase.auth.getSession();
+      // Use session from signUp directly; fall back to getSession (timing edge case)
+      const session = signUpData?.session ?? (await supabase.auth.getSession()).data.session;
+
       if (session?.user) {
-        // Update profile with country/currency from registration
-        await supabase.from('profiles').update({
-          full_name: form.full_name,
-          country_code: selectedCountry.code,
-          country_name: selectedCountry.name,
-          currency: selectedCountry.currency,
-        }).eq('id', session.user.id);
-        // Hydrate store before navigating
+        // Update profile with country/currency (non-blocking if tables not ready yet)
+        try {
+          await supabase.from('profiles').update({
+            full_name: form.full_name,
+            country_code: selectedCountry.code,
+            country_name: selectedCountry.name,
+            currency: selectedCountry.currency,
+          }).eq('id', session.user.id);
+        } catch { /* non-blocking */ }
         setUser(session.user);
         setSession(session);
-        await fetchProfile(session.user.id);
+        try { await fetchProfile(session.user.id); } catch { /* non-blocking */ }
         navigate('/dashboard', { replace: true });
       } else {
+        // Email confirmation required — show check-email screen
         setStep('check-email');
       }
     }

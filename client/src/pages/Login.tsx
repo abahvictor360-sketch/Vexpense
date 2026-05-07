@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -9,7 +9,12 @@ import toast from 'react-hot-toast';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setUser, setSession, fetchProfile } = useAuthStore();
+  const { user, setUser, setSession, fetchProfile } = useAuthStore();
+
+  // Already logged in → skip login page
+  useEffect(() => {
+    if (user) navigate('/dashboard', { replace: true });
+  }, [user]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Globe, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -10,7 +10,12 @@ import toast from 'react-hot-toast';
 
 export default function Register() {
   const navigate = useNavigate();
-  const { setUser, setSession, fetchProfile } = useAuthStore();
+  const { user, setUser, setSession, fetchProfile } = useAuthStore();
+
+  // Already logged in → skip register page
+  useEffect(() => {
+    if (user) navigate('/dashboard', { replace: true });
+  }, [user]);
   const [step, setStep] = useState<'form' | 'check-email'>('form');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -87,12 +92,27 @@ export default function Register() {
             <CheckCircle2 className="w-8 h-8 text-green-500" />
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Check your email</h2>
+          <p className="text-sm text-gray-500 mb-2">
+            We sent a confirmation link to <strong>{form.email}</strong>.
+          </p>
           <p className="text-sm text-gray-500 mb-6">
-            We sent a confirmation link to <strong>{form.email}</strong>. Click it to activate your account.
+            Click the link in the email to activate your account — you'll be redirected to your dashboard automatically.
           </p>
           <Button variant="primary" size="md" fullWidth onClick={() => navigate('/login')}>
-            Go to Login
+            Back to Login
           </Button>
+          <p className="text-xs text-gray-400 mt-4">
+            Didn't receive it? Check your spam folder or{' '}
+            <button
+              className="text-brand-600 font-medium hover:underline"
+              onClick={async () => {
+                await supabase.auth.resend({ type: 'signup', email: form.email });
+                toast.success('Confirmation email resent!');
+              }}
+            >
+              resend
+            </button>
+          </p>
         </div>
       </div>
     );

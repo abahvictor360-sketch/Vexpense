@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { rateLimit } from 'express-rate-limit';
 import aiRouter from './routes/ai';
 import economyRouter from './routes/economy';
+import adminRouter from './routes/admin';
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.get('/health', (_req, res) => {
 
 app.use('/api/ai', aiRouter);
 app.use('/api/economy', economyRouter);
+app.use('/api/admin', adminRouter);
 
 // ─── 404 handler ─────────────────────────────────────────────────────────────
 app.use((_req, res) => {

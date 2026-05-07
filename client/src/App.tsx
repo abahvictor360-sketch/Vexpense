@@ -14,6 +14,7 @@ const Analytics  = lazy(() => import('./pages/Analytics'));
 const Goals      = lazy(() => import('./pages/Goals'));
 const Advisor    = lazy(() => import('./pages/Advisor'));
 const Settings   = lazy(() => import('./pages/Settings'));
+const Admin      = lazy(() => import('./pages/Admin'));
 
 function AuthInitializer({ children }: { children: React.ReactNode }) {
   useAuth();
@@ -37,6 +38,7 @@ export default function App() {
               <Route path="/goals"        element={<Goals />} />
               <Route path="/advisor"      element={<Advisor />} />
               <Route path="/settings"     element={<Settings />} />
+              <Route path="/admin"        element={<Admin />} />
             </Route>
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

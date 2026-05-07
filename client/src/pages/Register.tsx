@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Globe, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { COUNTRIES } from '../utils';
@@ -9,6 +10,7 @@ import toast from 'react-hot-toast';
 
 export default function Register() {
   const navigate = useNavigate();
+  const { setUser, setSession, fetchProfile } = useAuthStore();
   const [step, setStep] = useState<'form' | 'check-email'>('form');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -57,16 +59,20 @@ export default function Register() {
     if (error) {
       toast.error(error.message);
     } else {
-      // Also update profile immediately with country/currency
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
+        // Update profile with country/currency from registration
         await supabase.from('profiles').update({
           full_name: form.full_name,
           country_code: selectedCountry.code,
           country_name: selectedCountry.name,
           currency: selectedCountry.currency,
         }).eq('id', session.user.id);
-        navigate('/dashboard');
+        // Hydrate store before navigating
+        setUser(session.user);
+        setSession(session);
+        await fetchProfile(session.user.id);
+        navigate('/dashboard', { replace: true });
       } else {
         setStep('check-email');
       }

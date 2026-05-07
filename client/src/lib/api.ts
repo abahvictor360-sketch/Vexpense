@@ -34,6 +34,30 @@ export async function getEconomy(countryCode: string): Promise<EconomyData> {
   return apiFetch(`/api/economy/${countryCode}`);
 }
 
+export async function getAdminStats(): Promise<{
+  totalUsers: number; totalExpenses: number; totalGoals: number;
+  totalBudgets: number; totalAmountTracked: number;
+  newUsersThisMonth: number; expensesThisMonth: number;
+}> {
+  return apiFetch('/api/admin/stats');
+}
+
+export async function getAdminUsers(): Promise<Array<{
+  id: string; full_name: string; email: string; currency: string;
+  country_name: string; monthly_income: number; created_at: string;
+  expenseCount: number; totalSpent: number; goalCount: number;
+}>> {
+  return apiFetch('/api/admin/users');
+}
+
+export async function getAdminActivity(): Promise<Array<{
+  id: string; amount: number; description: string; date: string;
+  created_at: string; user_id: string;
+  profiles: { full_name: string; currency: string } | null;
+}>> {
+  return apiFetch('/api/admin/activity');
+}
+
 export async function streamChat(
   message: string,
   onChunk: (text: string) => void,

@@ -1,12 +1,14 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Receipt, BarChart3, Target,
-  MessageSquareHeart, Settings, LogOut
+  MessageSquareHeart, Settings, LogOut, ShieldCheck
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { getInitials } from '../../utils';
 import { clsx } from '../../utils/clsx';
 import toast from 'react-hot-toast';
+
+const ADMIN_EMAIL = 'abahvictor760@gmail.com';
 
 const NAV_ITEMS = [
   { to: '/dashboard',  icon: LayoutDashboard,      label: 'Dashboard'  },
@@ -19,6 +21,7 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   const { profile, signOut } = useAuthStore();
+  const isAdmin = profile?.email === ADMIN_EMAIL;
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -72,6 +75,29 @@ export function Sidebar() {
           </NavLink>
         ))}
       </nav>
+
+      {/* Admin link */}
+      {isAdmin && (
+        <div className="px-3 pb-1">
+          <NavLink
+            to="/admin"
+            className={({ isActive }) => clsx(
+              'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
+              isActive ? 'bg-brand-50 text-brand-700' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
+            )}
+          >
+            {({ isActive }) => (
+              <>
+                <div className={clsx('w-8 h-8 rounded-lg flex items-center justify-center', isActive ? 'bg-brand-100' : 'bg-gray-100')}>
+                  <ShieldCheck className={clsx('w-4 h-4', isActive ? 'text-brand-600' : 'text-gray-400')} />
+                </div>
+                <span>Admin</span>
+                <span className="ml-auto px-1.5 py-0.5 bg-brand-600 text-white text-[9px] font-bold rounded-full">ADMIN</span>
+              </>
+            )}
+          </NavLink>
+        </div>
+      )}
 
       {/* User */}
       <div className="px-3 py-4 border-t border-gray-100">

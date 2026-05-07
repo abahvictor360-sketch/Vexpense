@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useAuthStore } from '../store/authStore';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import toast from 'react-hot-toast';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { setUser, setSession, fetchProfile } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -27,12 +29,16 @@ export default function Login() {
     ev.preventDefault();
     if (!validate()) return;
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
       toast.error(error.message === 'Invalid login credentials' ? 'Wrong email or password' : error.message);
-    } else {
-      navigate('/dashboard');
+    } else if (data.user) {
+      // Hydrate store immediately so AuthGuard doesn't redirect back to login
+      setUser(data.user);
+      setSession(data.session);
+      await fetchProfile(data.user.id);
+      navigate('/dashboard', { replace: true });
     }
   };
 

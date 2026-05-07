@@ -18,11 +18,14 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor:   ['react', 'react-dom', 'react-router-dom'],
-          charts:   ['recharts'],
-          supabase: ['@supabase/supabase-js'],
-          icons:    ['lucide-react'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('recharts'))            return 'charts';
+            if (id.includes('@supabase'))            return 'supabase';
+            if (id.includes('lucide-react'))         return 'icons';
+            if (id.includes('react-dom') || id.includes('react-router')) return 'vendor';
+            if (id.includes('react'))                return 'vendor';
+          }
         },
       },
     },

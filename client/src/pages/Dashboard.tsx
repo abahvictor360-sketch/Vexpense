@@ -9,7 +9,6 @@ import { useBudgetWarnings } from '../hooks/useBudgetWarnings';
 import { useEconomy } from '../hooks/useEconomy';
 import { getInsight } from '../lib/api';
 import { formatCurrency, getGreeting, getInitials, getMonthRange, calculateBreakdown } from '../utils';
-import { ProgressBar } from '../components/ui/ProgressBar';
 import { clsx } from '../utils/clsx';
 import { useCategoryStore } from '../store/categoryStore';
 

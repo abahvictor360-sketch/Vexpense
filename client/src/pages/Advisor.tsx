@@ -27,8 +27,8 @@ function TypingDots() {
 }
 
 export default function Advisor() {
-  const { user, profile } = useAuthStore();
-  const { messages, loading, streaming, streamingText, fetchHistory, sendMessage, clearHistory } = useAdvisorStore();
+  const { user } = useAuthStore();
+  const { messages, streaming, streamingText, fetchHistory, sendMessage, clearHistory } = useAdvisorStore();
   const [input, setInput] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);

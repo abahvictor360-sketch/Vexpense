@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Wallet, PieChart, Tag, Bell, Database, LogOut, Download, Trash2, ChevronRight, Save, Check } from 'lucide-react';
+import { User, Wallet, PieChart, Tag, Bell, Database, LogOut, Download, Trash2, Save, Check } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useExpenseStore } from '../store/expenseStore';
 import { useCategoryStore } from '../store/categoryStore';
@@ -8,8 +8,7 @@ import { useBudgetStore } from '../store/budgetStore';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
-import { COUNTRIES, exportToCSV, formatCurrency } from '../utils';
-import { supabase } from '../lib/supabase';
+import { COUNTRIES, exportToCSV } from '../utils';
 import { clsx } from '../utils/clsx';
 import toast from 'react-hot-toast';
 
@@ -50,10 +49,8 @@ export default function Settings() {
   // New category form
   const [newCatName, setNewCatName] = useState('');
   const [newCatIcon, setNewCatIcon] = useState('📦');
-  const [newCatColor, setNewCatColor] = useState('#534AB7');
+  const [newCatColor] = useState('#534AB7');
   const [addingCat, setAddingCat] = useState(false);
-
-  const currency_display = profile?.currency ?? 'USD';
 
   const saveProfile = async () => {
     setSaving(true);

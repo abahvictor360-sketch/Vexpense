@@ -14,7 +14,7 @@ interface GoalState {
   fetchContributions: (goalId: string) => Promise<void>;
 }
 
-export const useGoalStore = create<GoalState>((set, get) => ({
+export const useGoalStore = create<GoalState>((set) => ({
   goals: [],
   contributions: {},
   loading: false,

@@ -13,7 +13,7 @@ interface AdvisorState {
   clearHistory: (userId: string) => Promise<void>;
 }
 
-export const useAdvisorStore = create<AdvisorState>((set, get) => ({
+export const useAdvisorStore = create<AdvisorState>((set) => ({
   messages: [],
   loading: false,
   streaming: false,

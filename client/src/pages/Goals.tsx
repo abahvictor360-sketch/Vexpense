@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { PlusCircle, Target, Calendar, Pencil, Trash2, PauseCircle, CheckCircle2, PlayCircle } from 'lucide-react';
+import { PlusCircle, Calendar, Trash2, PauseCircle, CheckCircle2, PlayCircle } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useGoalStore } from '../store/goalStore';
 import { formatCurrency, formatDate } from '../utils';
@@ -18,7 +18,7 @@ const GOAL_COLORS = ['#534AB7','#ef4444','#f59e0b','#10b981','#3b82f6','#ec4899'
 
 export default function Goals() {
   const { user, profile } = useAuthStore();
-  const { goals, contributions, loading, fetchGoals, addGoal, updateGoal, deleteGoal, addContribution, fetchContributions } = useGoalStore();
+  const { goals, contributions, fetchGoals, addGoal, updateGoal, deleteGoal, addContribution, fetchContributions } = useGoalStore();
   const currency = profile?.currency ?? 'USD';
 
   const [showCreate, setShowCreate] = useState(false);
@@ -194,8 +194,6 @@ export default function Goals() {
       {/* Goal Detail Modal */}
       <Modal isOpen={!!detailGoal} onClose={() => setDetailGoal(null)} title={detailGoal?.name ?? ''} size="lg">
         {detailGoal && (() => {
-          const pct = Math.min((Number(detailGoal.saved_amount) / Number(detailGoal.target_amount)) * 100, 100);
-          // Find latest version
           const latestGoal = goals.find(g => g.id === detailGoal.id) ?? detailGoal;
           const latestPct = Math.min((Number(latestGoal.saved_amount) / Number(latestGoal.target_amount)) * 100, 100);
           const goalContribs = contributions[detailGoal.id] ?? [];

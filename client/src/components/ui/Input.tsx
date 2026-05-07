@@ -32,24 +32,28 @@ export function Input({
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
+        <label htmlFor={inputId} className="text-sm font-medium text-gray-700 dark:text-slate-300">
           {label}
         </label>
       )}
       <div className="relative">
         {icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 pointer-events-none">
             {icon}
           </div>
         )}
         <input
           id={inputId}
           className={clsx(
-            'w-full rounded-xl border bg-white transition-all duration-150 outline-none',
-            'placeholder:text-gray-400 text-gray-900',
+            'w-full rounded-xl border transition-all duration-150 outline-none',
+            'bg-white dark:bg-slate-800',
+            'text-gray-900 dark:text-slate-100',
+            'placeholder:text-gray-400 dark:placeholder:text-slate-500',
             'focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20',
-            error ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20' : 'border-gray-200',
-            icon ? 'pl-10' : '',
+            error
+              ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
+              : 'border-gray-200 dark:border-slate-700',
+            icon      ? 'pl-10' : '',
             iconRight ? 'pr-10' : '',
             sizes[inputSize],
             className
@@ -57,13 +61,13 @@ export function Input({
           {...props}
         />
         {iconRight && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500">
             {iconRight}
           </div>
         )}
       </div>
-      {error && <p className="text-xs text-red-500 flex items-center gap-1">{error}</p>}
-      {hint && !error && <p className="text-xs text-gray-500">{hint}</p>}
+      {error  && <p className="text-xs text-red-500 flex items-center gap-1">{error}</p>}
+      {hint && !error && <p className="text-xs text-gray-500 dark:text-slate-500">{hint}</p>}
     </div>
   );
 }

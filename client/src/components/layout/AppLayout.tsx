@@ -10,8 +10,8 @@ import { useCategoryStore } from '../../store/categoryStore';
 
 export function AppLayout() {
   const { user } = useAuthStore();
-  const fetchExpenses = useExpenseStore(s => s.fetchExpenses);
-  const fetchBudgets = useBudgetStore(s => s.fetchBudgets);
+  const fetchExpenses   = useExpenseStore(s => s.fetchExpenses);
+  const fetchBudgets    = useBudgetStore(s => s.fetchBudgets);
   const fetchCategories = useCategoryStore(s => s.fetchCategories);
 
   useEffect(() => {
@@ -23,10 +23,9 @@ export function AppLayout() {
   }, [user?.id]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 flex">
       <Sidebar />
 
-      {/* Main content */}
       <main className="flex-1 lg:ml-60 min-h-screen">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6 pb-24 lg:pb-8">
           <Outlet />
@@ -46,9 +45,7 @@ export function AppLayout() {
             padding: '10px 16px',
             boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
           },
-          success: {
-            iconTheme: { primary: '#534AB7', secondary: '#fff' },
-          },
+          success: { iconTheme: { primary: '#534AB7', secondary: '#fff' } },
         }}
       />
     </div>

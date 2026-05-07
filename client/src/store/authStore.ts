@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   session: null,
   loading: true,
 
-  setUser: (user) => set({ user }),
+  setUser:    (user)    => set({ user }),
   setProfile: (profile) => set({ profile }),
   setSession: (session) => set({ session }),
   setLoading: (loading) => set({ loading }),
@@ -34,7 +34,34 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       .select('*')
       .eq('id', userId)
       .single();
-    if (data) set({ profile: data as Profile });
+
+    if (data) {
+      set({ profile: data as Profile });
+      return;
+    }
+
+    // No profile row — this happens when a user registered before the migration ran.
+    // Create a minimal profile so the app works.
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: upserted } = await supabase
+        .from('profiles')
+        .upsert({
+          id: userId,
+          email: user.email ?? '',
+          full_name: (user.user_metadata?.full_name as string) ?? '',
+          country_code: (user.user_metadata?.country_code as string) ?? 'NG',
+          country_name: (user.user_metadata?.country_name as string) ?? 'Nigeria',
+          currency: (user.user_metadata?.currency as string) ?? 'NGN',
+          avatar_color: '#534AB7',
+          monthly_income: 0,
+          onboarding_done: false,
+        })
+        .select()
+        .single();
+      if (upserted) set({ profile: upserted as Profile });
+    } catch { /* non-blocking */ }
   },
 
   updateProfile: async (updates: Partial<Profile>) => {

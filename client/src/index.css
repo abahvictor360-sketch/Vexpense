@@ -8,9 +8,11 @@
   * { -webkit-tap-highlight-color: transparent; }
   html { scroll-behavior: smooth; }
   body { @apply font-sans bg-gray-50 text-gray-900 antialiased; }
+  .dark body { background-color: rgb(15 23 42); color: rgb(241 245 249); }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { @apply bg-transparent; }
   ::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full; }
+  .dark ::-webkit-scrollbar-thumb { background-color: rgb(51 65 85); }
   ::-webkit-scrollbar-thumb:hover { @apply bg-gray-400; }
 }
 
@@ -21,9 +23,15 @@
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite linear;
   }
+  .dark .skeleton {
+    background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+    background-size: 200% 100%;
+  }
   .card { @apply bg-white rounded-2xl border border-gray-100 shadow-card p-4; }
+  .dark .card { background-color: rgb(30 41 59); border-color: rgb(51 65 85); }
   .card-press { @apply transition-all duration-150 active:scale-95 cursor-pointer; }
   .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .dark .glass { background: rgba(30,41,59,0.85); }
   .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 80px); }
   .tabular-nums { font-variant-numeric: tabular-nums; }
 }
@@ -32,3 +40,41 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
+
+/* ═══════════════════════════════════════════════════
+   DARK MODE — global gray-scale remapping
+   Covers all pages without touching every component.
+═══════════════════════════════════════════════════ */
+.dark .bg-white          { background-color: rgb(30 41 59)  }  /* slate-800 */
+.dark .bg-gray-50        { background-color: rgb(15 23 42)  }  /* slate-900 */
+.dark .bg-gray-100       { background-color: rgb(30 41 59)  }  /* slate-800 */
+.dark .bg-gray-200       { background-color: rgb(51 65 85)  }  /* slate-700 */
+
+.dark .border-gray-50    { border-color: rgb(30 41 59)       }
+.dark .border-gray-100   { border-color: rgb(51 65 85)       }  /* slate-700 */
+.dark .border-gray-200   { border-color: rgb(51 65 85)       }  /* slate-700 */
+
+.dark .text-gray-900     { color: rgb(241 245 249) }  /* slate-100 */
+.dark .text-gray-800     { color: rgb(226 232 240) }  /* slate-200 */
+.dark .text-gray-700     { color: rgb(203 213 225) }  /* slate-300 */
+.dark .text-gray-600     { color: rgb(148 163 184) }  /* slate-400 */
+.dark .text-gray-500     { color: rgb(100 116 139) }  /* slate-500 */
+.dark .text-gray-400     { color: rgb(71 85 105)   }  /* slate-600 */
+
+/* Divide (used in card lists) */
+.dark .divide-gray-50 > * + *   { border-color: rgb(51 65 85) }
+.dark .divide-gray-100 > * + *  { border-color: rgb(51 65 85) }
+
+/* Form elements without explicit bg class */
+.dark input:not([class*="bg-brand"]):not([class*="bg-amber"]):not([class*="bg-green"]),
+.dark select,
+.dark textarea {
+  background-color: rgb(30 41 59);
+  color: rgb(241 245 249);
+  border-color: rgb(51 65 85);
+}
+.dark input::placeholder,
+.dark textarea::placeholder { color: rgb(71 85 105); }
+
+/* Shadow cards get a darker shadow in dark */
+.dark .shadow-card { box-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.25); }

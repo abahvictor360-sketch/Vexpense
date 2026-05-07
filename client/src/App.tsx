@@ -1,9 +1,10 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { AuthGuard } from './components/layout/AuthGuard';
 import { PageLoader } from './components/ui/Spinner';
 import { useAuth } from './hooks/useAuth';
+import { applyTheme, themeStore } from './store/themeStore';
 
 const Landing    = lazy(() => import('./pages/Landing'));
 const Login      = lazy(() => import('./pages/Login'));
@@ -17,6 +18,21 @@ const Advisor    = lazy(() => import('./pages/Advisor'));
 const Settings   = lazy(() => import('./pages/Settings'));
 const Admin      = lazy(() => import('./pages/Admin'));
 
+/** Applies the saved theme on every render and listens to system changes */
+function ThemeApplier() {
+  useEffect(() => {
+    applyTheme(themeStore.get());
+
+    // Re-apply when system preference changes (only matters when theme = 'system')
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = () => applyTheme(themeStore.get());
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  return null;
+}
+
 function AuthInitializer({ children }: { children: React.ReactNode }) {
   useAuth();
   return <>{children}</>;
@@ -25,6 +41,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <ThemeApplier />
       <AuthInitializer>
         <Suspense fallback={<PageLoader />}>
           <Routes>

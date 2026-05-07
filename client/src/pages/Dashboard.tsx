@@ -189,9 +189,26 @@ export default function Dashboard() {
       </div>
 
       {/* ═══════════════════════════════════════
+          SALARY PROMPT (if income not set)
+      ═══════════════════════════════════════ */}
+      {profile && !profile.monthly_income && (
+        <button
+          onClick={() => navigate('/settings')}
+          className="flex items-center gap-3 px-4 py-3 bg-brand-50 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 rounded-2xl text-left w-full"
+        >
+          <span className="text-xl">💡</span>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-brand-800 dark:text-brand-300">Set your monthly income</p>
+            <p className="text-xs text-brand-600 dark:text-brand-400">Get AI-powered budget suggestions tailored to your salary</p>
+          </div>
+          <ChevronRight className="w-4 h-4 text-brand-400 flex-shrink-0" />
+        </button>
+      )}
+
+      {/* ═══════════════════════════════════════
           PERIOD SWITCHER
       ═══════════════════════════════════════ */}
-      <div className="flex items-center gap-1 bg-gray-100 rounded-2xl p-1">
+      <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1">
         {(['week', 'month', 'quarter'] as Period[]).map(p => (
           <button
             key={p}
@@ -199,8 +216,8 @@ export default function Dashboard() {
             className={clsx(
               'flex-1 py-2 rounded-xl text-sm font-medium transition-all duration-200',
               period === p
-                ? 'bg-gray-900 text-white shadow-sm'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-gray-900 dark:bg-slate-600 text-white shadow-sm'
+                : 'text-gray-500 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200'
             )}
           >
             {p === 'week' ? 'Week' : p === 'month' ? 'Month' : 'Quarter'}
@@ -211,7 +228,7 @@ export default function Dashboard() {
       {/* ═══════════════════════════════════════
           AI INSIGHT CARD
       ═══════════════════════════════════════ */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-card px-4 py-3.5">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-card px-4 py-3.5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-2.5 flex-1">
             {/* Blue dot */}

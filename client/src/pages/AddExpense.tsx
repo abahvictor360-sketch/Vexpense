@@ -138,10 +138,10 @@ export default function AddExpense() {
     <div className="flex flex-col gap-0 animate-fade-in max-w-lg mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-white border border-gray-200 flex items-center justify-center shadow-card text-gray-600 hover:bg-gray-50">
+        <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 flex items-center justify-center shadow-card text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700">
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-xl font-bold text-gray-900">Add Expense</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Add Expense</h1>
       </div>
 
       {/* Amount Input */}
@@ -204,14 +204,14 @@ export default function AddExpense() {
           placeholder="Description (optional)"
           value={description}
           onChange={e => setDescription(e.target.value)}
-          className="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm placeholder:text-gray-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+          className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
         />
 
         <input
           type="date"
           value={date}
           onChange={e => setDate(e.target.value)}
-          className="w-full h-11 px-4 rounded-xl border border-gray-200 text-sm text-gray-700 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+          className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
         />
 
         {/* Payment Method */}
@@ -246,7 +246,7 @@ export default function AddExpense() {
             value={notes}
             onChange={e => setNotes(e.target.value)}
             rows={2}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm placeholder:text-gray-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 resize-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100 text-sm placeholder:text-gray-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 resize-none"
           />
         )}
       </div>

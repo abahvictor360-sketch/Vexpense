@@ -6,23 +6,20 @@ import { clsx } from '../../utils/clsx';
 import { useBudgetWarnings } from '../../hooks/useBudgetWarnings';
 
 const NAV_ITEMS = [
-  { to: '/dashboard',    icon: LayoutDashboard,    label: 'Home'      },
-  { to: '/analytics',    icon: BarChart2,           label: 'Analytics' },
-  { to: '/expenses/add', icon: Plus,                label: 'Add',       isAdd: true },
-  { to: '/goals',        icon: Target,              label: 'Goals'     },
-  { to: '/advisor',      icon: MessageSquareHeart,  label: 'Advisor',   isBadge: true },
+  { to: '/dashboard',    icon: LayoutDashboard,   label: 'Home'     },
+  { to: '/analytics',    icon: BarChart2,          label: 'Analytics'},
+  { to: '/expenses/add', icon: Plus,               label: 'Add',      isAdd: true  },
+  { to: '/goals',        icon: Target,             label: 'Goals'    },
+  { to: '/advisor',      icon: MessageSquareHeart, label: 'Advisor',  isBadge: true},
 ];
 
 export function BottomNav() {
-  const warnings = useBudgetWarnings();
+  const warnings   = useBudgetWarnings();
   const badgeCount = warnings.length;
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-100">
-      <div
-        className="flex items-end h-16"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
-      >
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800">
+      <div className="flex items-end h-16" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {NAV_ITEMS.map(({ to, icon: Icon, label, isAdd, isBadge }) => {
           if (isAdd) {
             return (
@@ -34,16 +31,14 @@ export function BottomNav() {
                 {({ isActive }) => (
                   <>
                     <div className={clsx(
-                      'w-10 h-10 rounded-2xl flex items-center justify-center transition-all',
-                      isActive
-                        ? 'bg-brand-600 shadow-lg shadow-brand-600/30'
-                        : 'bg-brand-600'
+                      'w-10 h-10 rounded-2xl flex items-center justify-center transition-all shadow-brand',
+                      isActive ? 'bg-brand-700' : 'bg-brand-600'
                     )}>
                       <Icon className="w-5 h-5 text-white" strokeWidth={2.5} />
                     </div>
                     <span className={clsx(
                       'text-[10px] font-medium leading-none',
-                      isActive ? 'text-brand-600' : 'text-gray-400'
+                      isActive ? 'text-brand-600 dark:text-brand-400' : 'text-gray-400 dark:text-slate-500'
                     )}>
                       {label}
                     </span>
@@ -65,12 +60,12 @@ export function BottomNav() {
                   <div className="relative">
                     <div className={clsx(
                       'w-10 h-8 rounded-xl flex items-center justify-center transition-colors',
-                      isActive ? 'bg-brand-50' : 'bg-transparent'
+                      isActive ? 'bg-brand-50 dark:bg-brand-900/30' : 'bg-transparent'
                     )}>
                       <Icon
                         className={clsx(
                           'w-5 h-5 transition-colors',
-                          isActive ? 'text-brand-600' : 'text-gray-400'
+                          isActive ? 'text-brand-600 dark:text-brand-400' : 'text-gray-400 dark:text-slate-500'
                         )}
                         strokeWidth={isActive ? 2.5 : 2}
                       />
@@ -83,7 +78,7 @@ export function BottomNav() {
                   </div>
                   <span className={clsx(
                     'text-[10px] font-medium leading-none',
-                    isActive ? 'text-brand-600' : 'text-gray-400'
+                    isActive ? 'text-brand-600 dark:text-brand-400' : 'text-gray-400 dark:text-slate-500'
                   )}>
                     {label}
                   </span>

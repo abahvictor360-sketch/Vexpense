@@ -60,18 +60,18 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 INSERT INTO categories (name, icon, color, is_default, user_id)
-SELECT name, icon, color, is_default, user_id FROM (VALUES
-  ('Food & Drinks',    '🍔', '#f97316', true, NULL),
-  ('Transport',        '🚗', '#3b82f6', true, NULL),
-  ('Rent & Bills',     '🏠', '#8b5cf6', true, NULL),
-  ('Entertainment',    '🎬', '#ec4899', true, NULL),
-  ('Shopping',         '🛍️', '#f59e0b', true, NULL),
-  ('Health',           '❤️', '#ef4444', true, NULL),
-  ('Education',        '📚', '#6366f1', true, NULL),
-  ('Savings',          '💰', '#10b981', true, NULL),
-  ('Subscriptions',    '📱', '#14b8a6', true, NULL),
-  ('Other',            '📦', '#9ca3af', true, NULL)
-) AS v(name, icon, color, is_default, user_id)
+SELECT name, icon, color::text, is_default, null::uuid FROM (VALUES
+  ('Food & Drinks',    '🍔', '#f97316', true),
+  ('Transport',        '🚗', '#3b82f6', true),
+  ('Rent & Bills',     '🏠', '#8b5cf6', true),
+  ('Entertainment',    '🎬', '#ec4899', true),
+  ('Shopping',         '🛍️', '#f59e0b', true),
+  ('Health',           '❤️', '#ef4444', true),
+  ('Education',        '📚', '#6366f1', true),
+  ('Savings',          '💰', '#10b981', true),
+  ('Subscriptions',    '📱', '#14b8a6', true),
+  ('Other',            '📦', '#9ca3af', true)
+) AS v(name, icon, color, is_default)
 WHERE NOT EXISTS (SELECT 1 FROM categories WHERE is_default = true LIMIT 1);
 
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;

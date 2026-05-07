@@ -27,8 +27,12 @@ export function useAuth() {
 
         if (session?.user) {
           await fetchProfile(session.user.id);
-          // Redirect to dashboard on any sign-in event (includes email confirmation)
-          if (event === 'SIGNED_IN') {
+          // Only auto-navigate on fresh sign-in / email confirmation, not on session restore
+          if (event === 'SIGNED_IN' && (
+            window.location.pathname === '/login' ||
+            window.location.pathname === '/register' ||
+            window.location.pathname === '/'
+          )) {
             navigate('/dashboard', { replace: true });
           }
         }

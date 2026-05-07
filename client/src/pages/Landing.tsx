@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Sparkles, BarChart3, Target, Shield, Globe, Zap,
   ArrowRight, CheckCircle2, MessageSquareHeart, PieChart, TrendingUp
 } from 'lucide-react';
+import { useAuthStore } from '../store/authStore';
 
 const FEATURES = [
   {
@@ -51,6 +53,12 @@ const TESTIMONIALS = [
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
+
+  // Already logged in → skip landing page
+  useEffect(() => {
+    if (user) navigate('/dashboard', { replace: true });
+  }, [user]);
 
   return (
     <div className="min-h-screen bg-white font-sans overflow-x-hidden">

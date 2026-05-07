@@ -49,7 +49,7 @@ function StatCard({ icon: Icon, label, value, sub, color }: {
 }
 
 export default function Admin() {
-  const { profile } = useAuthStore();
+  const { profile, loading: authLoading } = useAuthStore();
   const navigate    = useNavigate();
 
   const [stats,     setStats]     = useState<AdminStats | null>(null);
@@ -62,9 +62,10 @@ export default function Admin() {
   const isAdmin = profile?.email === ADMIN_EMAIL;
 
   useEffect(() => {
+    if (authLoading) return;                                          // still resolving session
     if (profile && !isAdmin) { navigate('/dashboard', { replace: true }); return; }
     if (isAdmin) loadData();
-  }, [isAdmin, profile]);
+  }, [isAdmin, profile, authLoading]);
 
   const loadData = async () => {
     setLoading(true);
@@ -89,10 +90,29 @@ export default function Admin() {
     setLoading(false);
   };
 
-  // Still resolving profile
-  if (!profile) return (
-    <div className="min-h-screen flex items-center justify-center">
+  // Still resolving session
+  if (authLoading) return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
       <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+
+  // Profile confirmed missing — no profile row in DB
+  if (!profile) return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 p-6">
+      <div className="text-center max-w-sm">
+        <ShieldCheck className="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-slate-600" />
+        <h2 className="font-bold text-gray-900 dark:text-white mb-2">Profile not found</h2>
+        <p className="text-sm text-gray-500 dark:text-slate-400 mb-4">
+          Your account has no profile row yet. Run this in the Supabase SQL editor:
+        </p>
+        <code className="block text-xs bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-slate-300 p-3 rounded-xl text-left leading-relaxed">
+          {"INSERT INTO profiles (id, email, full_name)\nSELECT id, email, email\nFROM auth.users\nWHERE email = 'abahvictor760@gmail.com'\nON CONFLICT (id) DO NOTHING;"}
+        </code>
+        <button onClick={() => navigate('/dashboard')} className="mt-4 text-sm text-brand-600 hover:underline">
+          ← Back to Dashboard
+        </button>
+      </div>
     </div>
   );
 

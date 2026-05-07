@@ -1,55 +1,90 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, Receipt, PlusCircle, Target, MessageSquareHeart
+  LayoutDashboard, BarChart2, Plus, Target, MessageSquareHeart
 } from 'lucide-react';
 import { clsx } from '../../utils/clsx';
+import { useBudgetWarnings } from '../../hooks/useBudgetWarnings';
 
 const NAV_ITEMS = [
-  { to: '/dashboard', icon: LayoutDashboard, label: 'Home'     },
-  { to: '/expenses',  icon: Receipt,         label: 'Expenses' },
-  { to: '/expenses/add', icon: PlusCircle,   label: 'Add',     isCTA: true },
-  { to: '/goals',     icon: Target,          label: 'Goals'    },
-  { to: '/advisor',   icon: MessageSquareHeart, label: 'Advisor' },
+  { to: '/dashboard',    icon: LayoutDashboard,    label: 'Home'      },
+  { to: '/analytics',    icon: BarChart2,           label: 'Analytics' },
+  { to: '/expenses/add', icon: Plus,                label: 'Add',       isAdd: true },
+  { to: '/goals',        icon: Target,              label: 'Goals'     },
+  { to: '/advisor',      icon: MessageSquareHeart,  label: 'Advisor',   isBadge: true },
 ];
 
 export function BottomNav() {
-  const navigate = useNavigate();
+  const warnings = useBudgetWarnings();
+  const badgeCount = warnings.length;
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 glass border-t border-gray-200/80">
-      <div className="flex items-center h-16 px-2" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-        {NAV_ITEMS.map(({ to, icon: Icon, label, isCTA }) => {
-          if (isCTA) {
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-100">
+      <div
+        className="flex items-end h-16"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        {NAV_ITEMS.map(({ to, icon: Icon, label, isAdd, isBadge }) => {
+          if (isAdd) {
             return (
-              <div key={to} className="flex-1 flex justify-center">
-                <button
-                  onClick={() => navigate(to)}
-                  className="w-14 h-14 -mt-5 rounded-2xl bg-brand-gradient shadow-brand flex items-center justify-center active:scale-95 transition-transform"
-                >
-                  <Icon className="w-7 h-7 text-white" strokeWidth={2.5} />
-                </button>
-              </div>
+              <NavLink
+                key={to}
+                to={to}
+                className="flex-1 flex flex-col items-center justify-center pb-2 gap-0.5"
+              >
+                {({ isActive }) => (
+                  <>
+                    <div className={clsx(
+                      'w-10 h-10 rounded-2xl flex items-center justify-center transition-all',
+                      isActive
+                        ? 'bg-brand-600 shadow-lg shadow-brand-600/30'
+                        : 'bg-brand-600'
+                    )}>
+                      <Icon className="w-5 h-5 text-white" strokeWidth={2.5} />
+                    </div>
+                    <span className={clsx(
+                      'text-[10px] font-medium leading-none',
+                      isActive ? 'text-brand-600' : 'text-gray-400'
+                    )}>
+                      {label}
+                    </span>
+                  </>
+                )}
+              </NavLink>
             );
           }
+
           return (
             <NavLink
               key={to}
               to={to}
-              end={to === '/expenses'}
-              className={({ isActive }) => clsx(
-                'flex-1 flex flex-col items-center justify-center gap-0.5 py-1 transition-colors',
-                isActive ? 'text-brand-600' : 'text-gray-400 hover:text-gray-600'
-              )}
+              end={to === '/dashboard'}
+              className="flex-1 flex flex-col items-center justify-center pb-2 gap-0.5"
             >
               {({ isActive }) => (
                 <>
-                  <div className={clsx(
-                    'w-8 h-8 rounded-xl flex items-center justify-center transition-colors',
-                    isActive ? 'bg-brand-50' : 'bg-transparent'
-                  )}>
-                    <Icon className={clsx('w-5 h-5', isActive ? 'text-brand-600' : '')} />
+                  <div className="relative">
+                    <div className={clsx(
+                      'w-10 h-8 rounded-xl flex items-center justify-center transition-colors',
+                      isActive ? 'bg-brand-50' : 'bg-transparent'
+                    )}>
+                      <Icon
+                        className={clsx(
+                          'w-5 h-5 transition-colors',
+                          isActive ? 'text-brand-600' : 'text-gray-400'
+                        )}
+                        strokeWidth={isActive ? 2.5 : 2}
+                      />
+                    </div>
+                    {isBadge && badgeCount > 0 && (
+                      <span className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-[3px] leading-none">
+                        {badgeCount > 9 ? '9+' : badgeCount}
+                      </span>
+                    )}
                   </div>
-                  <span className={clsx('text-[10px] font-medium leading-none', isActive ? 'text-brand-600' : '')}>
+                  <span className={clsx(
+                    'text-[10px] font-medium leading-none',
+                    isActive ? 'text-brand-600' : 'text-gray-400'
+                  )}>
                     {label}
                   </span>
                 </>

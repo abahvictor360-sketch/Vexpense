@@ -1,26 +1,22 @@
 import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, BarChart2, Plus, Target, MessageSquareHeart
+  LayoutDashboard, BarChart2, Plus, Target, Building2
 } from 'lucide-react';
 import { clsx } from '../../utils/clsx';
-import { useBudgetWarnings } from '../../hooks/useBudgetWarnings';
 
 const NAV_ITEMS = [
-  { to: '/dashboard',    icon: LayoutDashboard,   label: 'Home'     },
-  { to: '/analytics',    icon: BarChart2,          label: 'Analytics'},
-  { to: '/expenses/add', icon: Plus,               label: 'Add',      isAdd: true  },
-  { to: '/goals',        icon: Target,             label: 'Goals'    },
-  { to: '/advisor',      icon: MessageSquareHeart, label: 'Advisor',  isBadge: true},
+  { to: '/dashboard',    icon: LayoutDashboard, label: 'Home'     },
+  { to: '/analytics',    icon: BarChart2,        label: 'Analytics'},
+  { to: '/expenses/add', icon: Plus,             label: 'Add',      isAdd: true },
+  { to: '/goals',        icon: Target,           label: 'Goals'    },
+  { to: '/bank',         icon: Building2,        label: 'Bank'     },
 ];
 
 export function BottomNav() {
-  const warnings   = useBudgetWarnings();
-  const badgeCount = warnings.length;
-
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800">
       <div className="flex items-end h-16" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-        {NAV_ITEMS.map(({ to, icon: Icon, label, isAdd, isBadge }) => {
+        {NAV_ITEMS.map(({ to, icon: Icon, label, isAdd }) => {
           if (isAdd) {
             return (
               <NavLink
@@ -70,11 +66,6 @@ export function BottomNav() {
                         strokeWidth={isActive ? 2.5 : 2}
                       />
                     </div>
-                    {isBadge && badgeCount > 0 && (
-                      <span className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center px-[3px] leading-none">
-                        {badgeCount > 9 ? '9+' : badgeCount}
-                      </span>
-                    )}
                   </div>
                   <span className={clsx(
                     'text-[10px] font-medium leading-none',

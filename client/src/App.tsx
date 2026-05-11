@@ -17,6 +17,7 @@ const Goals      = lazy(() => import('./pages/Goals'));
 const Advisor    = lazy(() => import('./pages/Advisor'));
 const Settings   = lazy(() => import('./pages/Settings'));
 const Admin      = lazy(() => import('./pages/Admin'));
+const Bank       = lazy(() => import('./pages/Bank'));
 
 /** Applies the saved theme on every render and listens to system changes */
 function ThemeApplier() {
@@ -57,6 +58,7 @@ export default function App() {
               <Route path="/advisor"      element={<Advisor />} />
               <Route path="/settings"     element={<Settings />} />
               <Route path="/admin"        element={<Admin />} />
+              <Route path="/bank"         element={<Bank />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Receipt, BarChart3, Target,
-  MessageSquareHeart, Settings, LogOut, ShieldCheck
+  MessageSquareHeart, Settings, LogOut, ShieldCheck, Building2
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { getInitials } from '../../utils';
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { to: '/expenses',  icon: Receipt,            label: 'Expenses'   },
   { to: '/analytics', icon: BarChart3,          label: 'Analytics'  },
   { to: '/goals',     icon: Target,             label: 'Goals'      },
+  { to: '/bank',      icon: Building2,          label: 'Bank'       },
   { to: '/advisor',   icon: MessageSquareHeart, label: 'AI Advisor' },
   { to: '/settings',  icon: Settings,           label: 'Settings'   },
 ];

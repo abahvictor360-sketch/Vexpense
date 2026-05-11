@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, PlusCircle, ChevronRight } from 'lucide-react';
+import { RefreshCw, PlusCircle, ChevronRight, Sun, Moon } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useExpenseStore } from '../store/expenseStore';
 import { useBudgetStore } from '../store/budgetStore';
@@ -11,6 +11,7 @@ import { getInsight } from '../lib/api';
 import { formatCurrency, getGreeting, getInitials, getMonthRange, calculateBreakdown } from '../utils';
 import { clsx } from '../utils/clsx';
 import { useCategoryStore } from '../store/categoryStore';
+import { useTheme } from '../store/themeStore';
 
 type Period = 'week' | 'month' | 'quarter';
 
@@ -32,6 +33,7 @@ export default function Dashboard() {
   const fetchGoals = useGoalStore(s => s.fetchGoals);
   const { data: economy } = useEconomy(profile?.country_code ?? null);
 
+  const [theme, setTheme] = useTheme();
   const [period, setPeriod] = useState<Period>('month');
   const [insight, setInsight] = useState<string | null>(null);
   const [insightLoading, setInsightLoading] = useState(false);
@@ -89,13 +91,22 @@ export default function Dashboard() {
         {/* Logo */}
         <span className="text-xl font-bold tracking-tight">
           <span className="text-brand-600">V</span>
-          <span className="text-gray-800">expense</span>
+          <span className="text-gray-800 dark:text-slate-200">expense</span>
         </span>
 
         {/* Right controls */}
         <div className="flex items-center gap-2">
+          {/* Dark mode toggle */}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-card flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+
           {/* Notification bell */}
-          <button className="relative w-9 h-9 rounded-xl bg-white border border-gray-100 shadow-card flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">
+          <button className="relative w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-card flex items-center justify-center text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
             {/* bell icon SVG inline so it matches mockup exactly */}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -276,7 +287,7 @@ export default function Dashboard() {
             </button>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-card divide-y divide-gray-50">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-card divide-y divide-gray-50 dark:divide-slate-700">
             {breakdown.map(({ category, amount, count, percentage }) => (
               <div key={category.id} className="flex items-center gap-3 px-4 py-3">
                 {/* Emoji icon */}
@@ -337,7 +348,7 @@ export default function Dashboard() {
                 <button
                   key={goal.id}
                   onClick={() => navigate('/goals')}
-                  className="bg-white rounded-2xl border border-gray-100 shadow-card p-4 text-left card-press hover:shadow-card-hover"
+                  className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-card p-4 text-left card-press hover:shadow-card-hover"
                 >
                   <p className="text-[10px] text-gray-400 font-medium mb-1">Goal {idx + 1}</p>
                   <p className="text-sm font-bold text-gray-900 truncate mb-2.5">{goal.name}</p>
@@ -416,7 +427,7 @@ export default function Dashboard() {
           EMPTY STATE
       ═══════════════════════════════════════ */}
       {expenses.length === 0 && (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-card text-center py-12 px-6">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-card text-center py-12 px-6">
           <div className="text-4xl mb-3">💸</div>
           <h3 className="font-bold text-gray-900 mb-1">Start tracking</h3>
           <p className="text-sm text-gray-500 mb-5">Add your first expense to see insights here</p>

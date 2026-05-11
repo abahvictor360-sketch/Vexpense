@@ -62,7 +62,8 @@ export const useExpenseStore = create<ExpenseState>((set, get) => ({
       .insert(expense)
       .select('*, category:categories(*)')
       .single();
-    if (error || !data) return null;
+    if (error) { console.error('[addExpense]', error.message, error.details); return null; }
+    if (!data)  return null;
     const newExpense = data as Expense;
     set(s => ({ expenses: [newExpense, ...s.expenses], lastFetched: null }));
     return newExpense;

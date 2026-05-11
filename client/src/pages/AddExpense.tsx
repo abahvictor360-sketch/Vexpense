@@ -130,7 +130,7 @@ export default function AddExpense() {
         setShowNotes(false);
       }, 1200);
     } else {
-      toast.error('Failed to save expense');
+      toast.error('Failed to save — check browser console for details');
     }
   };
 
@@ -146,9 +146,9 @@ export default function AddExpense() {
 
       {/* Amount Input */}
       <div className="card mb-4 text-center">
-        <p className="text-xs text-gray-400 font-medium uppercase tracking-wide mb-2">Amount</p>
+        <p className="text-xs text-gray-400 dark:text-slate-500 font-medium uppercase tracking-wide mb-2">Amount</p>
         <div className="flex items-center justify-center gap-2">
-          <span className="text-2xl text-gray-400 font-light">{currency}</span>
+          <span className="text-2xl text-gray-400 dark:text-slate-500 font-light">{currency}</span>
           <input
             ref={amountRef}
             type="number"
@@ -158,7 +158,7 @@ export default function AddExpense() {
             onChange={e => setAmount(e.target.value)}
             className={clsx(
               'text-4xl font-bold bg-transparent border-none outline-none text-center tabular-nums w-48',
-              amount ? 'text-gray-900' : 'text-gray-300'
+              amount ? 'text-gray-900 dark:text-white' : 'text-gray-300 dark:text-slate-600'
             )}
           />
         </div>
@@ -175,8 +175,8 @@ export default function AddExpense() {
               className={clsx(
                 'flex flex-col items-center gap-1.5 p-2 rounded-2xl border-2 transition-all duration-150 active:scale-95',
                 selectedCategory?.id === cat.id
-                  ? 'border-brand-600 bg-brand-50 shadow-brand'
-                  : 'border-transparent bg-gray-50 hover:bg-gray-100'
+                  ? 'border-brand-600 bg-brand-50 dark:bg-brand-900/30 shadow-brand'
+                  : 'border-transparent bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600'
               )}
             >
               <span className="text-2xl leading-none">{cat.icon}</span>
@@ -223,8 +223,8 @@ export default function AddExpense() {
               className={clsx(
                 'flex items-center justify-center gap-1.5 h-11 rounded-xl border-2 text-sm font-medium transition-all',
                 paymentMethod === m.value
-                  ? 'border-brand-600 bg-brand-50 text-brand-700'
-                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                  ? 'border-brand-600 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300'
+                  : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
               )}
             >
               <span>{m.emoji}</span> {m.label}

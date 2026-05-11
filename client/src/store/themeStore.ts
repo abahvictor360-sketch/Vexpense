@@ -42,3 +42,14 @@ export function useTheme(): [Theme, (t: Theme) => void] {
   useEffect(() => themeStore.subscribe(() => setLocal(themeStore.get())), []);
   return [theme, themeStore.set];
 }
+
+// ── Apply saved theme immediately on module load ──────────────────────
+applyTheme(_theme);
+
+// ── Re-apply when OS preference changes (for 'system' mode) ──────────
+if (typeof window !== 'undefined') {
+  window.matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => {
+      if (themeStore.get() === 'system') applyTheme('system');
+    });
+}

@@ -1,12 +1,13 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, PlusCircle, Trash2, Edit2, X } from 'lucide-react';
+import { Search, Filter, PlusCircle, Trash2, Edit2, X, Banknote, CreditCard, ArrowRightLeft, Receipt } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useExpenseStore } from '../store/expenseStore';
 import { useCategoryStore } from '../store/categoryStore';
 import { useFilteredExpenses } from '../hooks/useFilteredExpenses';
 import { formatCurrency, formatDateHeader, groupByDate } from '../utils';
 import { EmptyState } from '../components/ui/EmptyState';
+import { CategoryIcon } from '../components/ui/CategoryIcon';
 import { Modal } from '../components/ui/Modal';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Button } from '../components/ui/Button';
@@ -14,8 +15,8 @@ import { clsx } from '../utils/clsx';
 import type { Expense, PaymentMethod } from '../types';
 import toast from 'react-hot-toast';
 
-const PAYMENT_LABELS: Record<PaymentMethod, string> = {
-  cash: '💵', card: '💳', transfer: '📲',
+const PAYMENT_ICONS: Record<PaymentMethod, React.ComponentType<{ className?: string }>> = {
+  cash: Banknote, card: CreditCard, transfer: ArrowRightLeft,
 };
 
 export default function Expenses() {
@@ -162,7 +163,7 @@ export default function Expenses() {
           })()}
           {filter.paymentMethod && (
             <span className="inline-flex items-center gap-1 bg-brand-50 text-brand-700 text-xs font-medium px-2.5 py-1 rounded-full border border-brand-200">
-              {PAYMENT_LABELS[filter.paymentMethod as PaymentMethod]} {filter.paymentMethod}
+              {(() => { const I = PAYMENT_ICONS[filter.paymentMethod as PaymentMethod]; return I ? <I className="w-3 h-3" /> : null; })()} {filter.paymentMethod}
               <button onClick={() => setFilter({ paymentMethod: null })}><X className="w-3 h-3" /></button>
             </span>
           )}
@@ -172,7 +173,7 @@ export default function Expenses() {
       {/* Expense List */}
       {filtered.length === 0 ? (
         <EmptyState
-          emoji="🔍"
+          icon={<Receipt className="w-8 h-8" />}
           title={filter.search || filter.categoryId ? 'No matching expenses' : 'No expenses yet'}
           description={filter.search || filter.categoryId ? 'Try adjusting your search or filters' : 'Add your first expense to start tracking'}
           action={!filter.search && !filter.categoryId ? { label: '+ Add Expense', onClick: () => navigate('/expenses/add') } : undefined}
@@ -197,14 +198,14 @@ export default function Expenses() {
                       className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
                       style={{ backgroundColor: `${expense.category?.color ?? '#9ca3af'}20` }}
                     >
-                      {expense.category?.icon ?? '📦'}
+                      <CategoryIcon icon={expense.category?.icon ?? '📦'} size="md" color={expense.category?.color} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-gray-900 truncate">{expense.description}</p>
                       <div className="flex items-center gap-1.5">
                         <span className="text-xs text-gray-400 truncate">{expense.category?.name ?? 'Uncategorized'}</span>
                         <span className="text-gray-300 text-xs">·</span>
-                        <span className="text-xs text-gray-400">{PAYMENT_LABELS[expense.payment_method]}</span>
+                        {(() => { const I = PAYMENT_ICONS[expense.payment_method]; return I ? <I className="w-3 h-3 text-gray-400 inline" /> : null; })()}
                       </div>
                     </div>
                     <div className="flex items-center gap-1">

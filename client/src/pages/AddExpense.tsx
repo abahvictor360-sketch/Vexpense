@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronDown, ChevronUp, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, Banknote, CreditCard, ArrowRightLeft } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useExpenseStore } from '../store/expenseStore';
 import { useBudgetStore } from '../store/budgetStore';
@@ -9,12 +9,13 @@ import { formatCurrency, getMonthRange } from '../utils';
 import { Button } from '../components/ui/Button';
 import { clsx } from '../utils/clsx';
 import type { PaymentMethod, Category } from '../types';
+import { CategoryIcon } from '../components/ui/CategoryIcon';
 import toast from 'react-hot-toast';
 
-const PAYMENT_METHODS: { value: PaymentMethod; label: string; emoji: string }[] = [
-  { value: 'cash',     label: 'Cash',     emoji: '💵' },
-  { value: 'card',     label: 'Card',     emoji: '💳' },
-  { value: 'transfer', label: 'Transfer', emoji: '📲' },
+const PAYMENT_METHODS: { value: PaymentMethod; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
+  { value: 'cash',     label: 'Cash',     Icon: Banknote         },
+  { value: 'card',     label: 'Card',     Icon: CreditCard       },
+  { value: 'transfer', label: 'Transfer', Icon: ArrowRightLeft   },
 ];
 
 const KEYWORD_MAP: Record<string, string> = {
@@ -179,7 +180,9 @@ export default function AddExpense() {
                   : 'border-transparent bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600'
               )}
             >
-              <span className="text-2xl leading-none">{cat.icon}</span>
+              <div className="w-7 h-7 flex items-center justify-center" style={{ color: cat.color }}>
+                <CategoryIcon icon={cat.icon} size="lg" />
+              </div>
               <span className={clsx(
                 'text-[10px] font-medium leading-tight text-center line-clamp-1',
                 selectedCategory?.id === cat.id ? 'text-brand-700' : 'text-gray-600'
@@ -227,7 +230,7 @@ export default function AddExpense() {
                   : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
               )}
             >
-              <span>{m.emoji}</span> {m.label}
+              <m.Icon className="w-4 h-4" /> {m.label}
             </button>
           ))}
         </div>

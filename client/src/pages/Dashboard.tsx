@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, PlusCircle, ChevronRight, Sun, Moon } from 'lucide-react';
+import { RefreshCw, PlusCircle, ChevronRight, Sun, Moon, Wallet, Lightbulb } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useExpenseStore } from '../store/expenseStore';
 import { useBudgetStore } from '../store/budgetStore';
@@ -132,8 +132,8 @@ export default function Dashboard() {
       {/* Greeting */}
       <div className="-mt-1">
         <p className="text-sm text-gray-500">{getGreeting()},</p>
-        <h1 className="text-2xl font-bold text-gray-900 leading-tight">
-          {profile?.full_name?.split(' ')[0] ?? 'there'} 👋
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+          {profile?.full_name?.split(' ')[0] ?? 'there'}
         </h1>
       </div>
 
@@ -207,7 +207,7 @@ export default function Dashboard() {
           onClick={() => navigate('/settings')}
           className="flex items-center gap-3 px-4 py-3 bg-brand-50 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 rounded-2xl text-left w-full"
         >
-          <span className="text-xl">💡</span>
+          <Lightbulb className="w-5 h-5 text-brand-600 dark:text-brand-400 flex-shrink-0" />
           <div className="flex-1">
             <p className="text-sm font-semibold text-brand-800 dark:text-brand-300">Set your monthly income</p>
             <p className="text-xs text-brand-600 dark:text-brand-400">Get AI-powered budget suggestions tailored to your salary</p>
@@ -428,7 +428,9 @@ export default function Dashboard() {
       ═══════════════════════════════════════ */}
       {expenses.length === 0 && (
         <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-card text-center py-12 px-6">
-          <div className="text-4xl mb-3">💸</div>
+          <div className="w-14 h-14 rounded-2xl bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center mb-3">
+            <Wallet className="w-7 h-7 text-brand-500" />
+          </div>
           <h3 className="font-bold text-gray-900 mb-1">Start tracking</h3>
           <p className="text-sm text-gray-500 mb-5">Add your first expense to see insights here</p>
           <button

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { PlusCircle, Calendar, Trash2, PauseCircle, CheckCircle2, PlayCircle } from 'lucide-react';
+import { PlusCircle, Calendar, Trash2, PauseCircle, CheckCircle2, PlayCircle, PiggyBank, Target, Flame } from 'lucide-react';
+import { CategoryIcon, GOAL_ICON_OPTIONS } from '../components/ui/CategoryIcon';
 import { useAuthStore } from '../store/authStore';
 import { useGoalStore } from '../store/goalStore';
 import { formatCurrency, formatDate } from '../utils';
@@ -13,7 +14,7 @@ import { clsx } from '../utils/clsx';
 import type { Goal } from '../types';
 import toast from 'react-hot-toast';
 
-const GOAL_ICONS = ['🎯','🏠','🚗','✈️','💻','📱','🎓','💍','🏖️','💰','🏋️','🎸','📸','🚀','⚽'];
+// GOAL_ICONS replaced by GOAL_ICON_OPTIONS from CategoryIcon.tsx
 const GOAL_COLORS = ['#534AB7','#ef4444','#f59e0b','#10b981','#3b82f6','#ec4899','#8b5cf6','#14b8a6','#f97316','#6366f1'];
 
 export default function Goals() {
@@ -30,7 +31,7 @@ export default function Goals() {
   const [addingFunds, setAddingFunds] = useState(false);
 
   // Create form
-  const [form, setForm] = useState({ name: '', target_amount: '', target_date: '', icon: '🎯', color: '#534AB7' });
+  const [form, setForm] = useState({ name: '', target_amount: '', target_date: '', icon: 'target', color: '#534AB7' });
   const [creating, setCreating] = useState(false);
 
   useEffect(() => { if (user?.id) fetchGoals(user.id); }, [user?.id]);
@@ -55,7 +56,7 @@ export default function Goals() {
     });
     setCreating(false);
     setShowCreate(false);
-    setForm({ name: '', target_amount: '', target_date: '', icon: '🎯', color: '#534AB7' });
+    setForm({ name: '', target_amount: '', target_date: '', icon: 'target', color: '#534AB7' });
     toast.success('Goal created! 🎯');
   };
 
@@ -104,13 +105,13 @@ export default function Goals() {
       {goals.length > 0 && (
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: 'Total Saved', value: formatCurrency(totalSaved, currency), icon: '💰' },
-            { label: 'Total Target', value: formatCurrency(totalTarget, currency), icon: '🎯' },
-            { label: 'In Progress', value: `${activeGoals.length}`, icon: '🔥' },
+            { label: 'Total Saved',  value: formatCurrency(totalSaved,  currency), Icon: PiggyBank, color: 'text-emerald-500' },
+            { label: 'Total Target', value: formatCurrency(totalTarget, currency),  Icon: Target,    color: 'text-brand-600'  },
+            { label: 'In Progress',  value: `${activeGoals.length}`,               Icon: Flame,     color: 'text-orange-500' },
           ].map(s => (
             <div key={s.label} className="card text-center py-3">
-              <div className="text-xl mb-1">{s.icon}</div>
-              <p className="text-sm font-bold text-gray-900 tabular-nums">{s.value}</p>
+              <s.Icon className={`w-5 h-5 mx-auto mb-1 ${s.color}`} />
+              <p className="text-sm font-bold text-gray-900 dark:text-white tabular-nums">{s.value}</p>
               <p className="text-[10px] text-gray-400 font-medium">{s.label}</p>
             </div>
           ))}
@@ -120,7 +121,7 @@ export default function Goals() {
       {/* Active Goals Grid */}
       {activeGoals.length === 0 && completedGoals.length === 0 ? (
         <EmptyState
-          emoji="🎯"
+          icon={<Target className="w-8 h-8" />}
           title="Set your first goal"
           description="Whether it's a phone, a trip, or an emergency fund — track it here"
           action={{ label: '+ Create Goal', onClick: () => setShowCreate(true) }}
@@ -140,10 +141,10 @@ export default function Goals() {
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div
-                        className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center"
                         style={{ backgroundColor: `${goal.color}20` }}
                       >
-                        {goal.icon}
+                        <CategoryIcon icon={goal.icon} size="lg" color={goal.color} />
                       </div>
                       <Badge color={goal.color} variant="soft">Active</Badge>
                     </div>
@@ -173,11 +174,15 @@ export default function Goals() {
           {/* Completed */}
           {completedGoals.length > 0 && (
             <>
-              <h2 className="text-sm font-semibold text-gray-700 mt-2">Completed 🎉</h2>
+              <h2 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mt-2 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-green-500" /> Completed
+              </h2>
               <div className="flex flex-col gap-2">
                 {completedGoals.map(goal => (
-                  <div key={goal.id} className="flex items-center gap-3 p-3.5 bg-green-50 rounded-2xl border border-green-100">
-                    <span className="text-2xl">{goal.icon}</span>
+                  <div key={goal.id} className="flex items-center gap-3 p-3.5 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-100 dark:border-green-800">
+                    <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${goal.color}20` }}>
+                      <CategoryIcon icon={goal.icon} size="sm" color={goal.color} />
+                    </div>
                     <div className="flex-1">
                       <p className="text-sm font-semibold text-green-800">{goal.name}</p>
                       <p className="text-xs text-green-600">{formatCurrency(Number(goal.target_amount), currency)} reached!</p>
@@ -298,18 +303,20 @@ export default function Goals() {
         <div className="p-5 flex flex-col gap-4">
           {/* Icon picker */}
           <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">Icon</p>
+            <p className="text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Icon</p>
             <div className="flex flex-wrap gap-2">
-              {GOAL_ICONS.map(icon => (
+              {GOAL_ICON_OPTIONS.map(({ key, Icon }) => (
                 <button
-                  key={icon}
-                  onClick={() => setForm(f => ({ ...f, icon }))}
+                  key={key}
+                  onClick={() => setForm(f => ({ ...f, icon: key }))}
                   className={clsx(
-                    'w-10 h-10 rounded-xl text-xl transition-all',
-                    form.icon === icon ? 'bg-brand-100 scale-110 shadow-sm' : 'bg-gray-50 hover:bg-gray-100'
+                    'w-10 h-10 rounded-xl flex items-center justify-center transition-all',
+                    form.icon === key
+                      ? 'bg-brand-100 dark:bg-brand-900/40 scale-110 shadow-sm text-brand-600 dark:text-brand-400'
+                      : 'bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 text-gray-500 dark:text-slate-400'
                   )}
                 >
-                  {icon}
+                  <Icon className="w-5 h-5" />
                 </button>
               ))}
             </div>

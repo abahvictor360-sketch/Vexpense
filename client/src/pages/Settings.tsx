@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import {
   User, Wallet, PieChart, Tag, Database,
   LogOut, Download, Trash2, Save, Check, Sun, Moon, Monitor, Sparkles,
+  type LucideIcon,
 } from 'lucide-react';
+import { ICON_MAP } from '../components/ui/CategoryIcon';
 import { useAuthStore } from '../store/authStore';
 import { useExpenseStore } from '../store/expenseStore';
 import { useCategoryStore } from '../store/categoryStore';
@@ -30,17 +32,17 @@ const TABS: { key: Tab; label: string; icon: React.ComponentType<{ className?: s
 const AVATAR_COLORS = ['#534AB7','#ef4444','#f59e0b','#10b981','#3b82f6','#ec4899','#8b5cf6','#f97316'];
 
 // Smart budget distribution (% of monthly income)
-const BUDGET_DISTRIBUTION: { name: string; pct: number; icon: string }[] = [
-  { name: 'Rent & Bills',    pct: 0.25, icon: '🏠' },
-  { name: 'Food & Drinks',   pct: 0.20, icon: '🍔' },
-  { name: 'Savings',         pct: 0.15, icon: '💰' },
-  { name: 'Transport',       pct: 0.10, icon: '🚗' },
-  { name: 'Shopping',        pct: 0.08, icon: '🛍️' },
-  { name: 'Health',          pct: 0.05, icon: '❤️' },
-  { name: 'Entertainment',   pct: 0.05, icon: '🎬' },
-  { name: 'Education',       pct: 0.04, icon: '📚' },
-  { name: 'Subscriptions',   pct: 0.03, icon: '📱' },
-  { name: 'Other',           pct: 0.05, icon: '📦' },
+const BUDGET_DISTRIBUTION: { name: string; pct: number; iconKey: string }[] = [
+  { name: 'Rent & Bills',    pct: 0.25, iconKey: '🏠' },
+  { name: 'Food & Drinks',   pct: 0.20, iconKey: '🍔' },
+  { name: 'Savings',         pct: 0.15, iconKey: '💰' },
+  { name: 'Transport',       pct: 0.10, iconKey: '🚗' },
+  { name: 'Shopping',        pct: 0.08, iconKey: '🛍️' },
+  { name: 'Health',          pct: 0.05, iconKey: '❤️' },
+  { name: 'Entertainment',   pct: 0.05, iconKey: '🎬' },
+  { name: 'Education',       pct: 0.04, iconKey: '📚' },
+  { name: 'Subscriptions',   pct: 0.03, iconKey: '📱' },
+  { name: 'Other',           pct: 0.05, iconKey: '📦' },
 ];
 
 export default function Settings() {
@@ -255,16 +257,19 @@ export default function Settings() {
               </div>
 
               <div className="flex flex-col gap-1">
-                {BUDGET_DISTRIBUTION.map(({ name: catName, pct, icon }) => (
+                {BUDGET_DISTRIBUTION.map(({ name: catName, pct, iconKey }) => {
+                  const BudgetIcon = (ICON_MAP[iconKey] ?? ICON_MAP['📦']) as LucideIcon;
+                  return (
                   <div key={catName} className="flex items-center gap-3 py-1.5">
-                    <span className="text-lg w-6 text-center flex-shrink-0">{icon}</span>
+                    <BudgetIcon className="w-4 h-4 text-gray-500 dark:text-slate-400 flex-shrink-0" />
                     <span className="flex-1 text-sm text-gray-700 dark:text-slate-300">{catName}</span>
                     <span className="text-xs text-gray-400 dark:text-slate-500 w-8 text-right">{Math.round(pct * 100)}%</span>
                     <span className="text-sm font-semibold text-gray-900 dark:text-white tabular-nums w-28 text-right">
                       {formatCurrency(Math.round(parsedIncome * pct), currency)}
                     </span>
                   </div>
-                ))}
+                  );
+                })}
               </div>
 
               <Button

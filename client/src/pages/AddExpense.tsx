@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronDown, ChevronUp, AlertCircle, CheckCircle2, Banknote, CreditCard, ArrowRightLeft } from 'lucide-react';
+import { ChevronLeft, ChevronDown, ChevronUp, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useExpenseStore } from '../store/expenseStore';
 import { useBudgetStore } from '../store/budgetStore';
@@ -8,15 +8,9 @@ import { useCategoryStore } from '../store/categoryStore';
 import { formatCurrency, getMonthRange } from '../utils';
 import { Button } from '../components/ui/Button';
 import { clsx } from '../utils/clsx';
-import type { PaymentMethod, Category } from '../types';
+import type { Category } from '../types';
 import { CategoryIcon } from '../components/ui/CategoryIcon';
 import toast from 'react-hot-toast';
-
-const PAYMENT_METHODS: { value: PaymentMethod; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
-  { value: 'cash',     label: 'Cash',     Icon: Banknote         },
-  { value: 'card',     label: 'Card',     Icon: CreditCard       },
-  { value: 'transfer', label: 'Transfer', Icon: ArrowRightLeft   },
-];
 
 const KEYWORD_MAP: Record<string, string> = {
   uber: 'Transport', lyft: 'Transport', bolt: 'Transport', taxi: 'Transport', bus: 'Transport', fuel: 'Transport', petrol: 'Transport',
@@ -41,7 +35,6 @@ export default function AddExpense() {
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cash');
   const [notes, setNotes] = useState('');
   const [showNotes, setShowNotes] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -114,7 +107,7 @@ export default function AddExpense() {
       description: description || selectedCategory.name,
       notes: notes || null,
       date,
-      payment_method: paymentMethod,
+      payment_method: 'cash',
       receipt_url: null,
     });
     setLoading(false);
@@ -216,24 +209,6 @@ export default function AddExpense() {
           onChange={e => setDate(e.target.value)}
           className="w-full h-11 px-4 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
         />
-
-        {/* Payment Method */}
-        <div className="grid grid-cols-3 gap-2">
-          {PAYMENT_METHODS.map(m => (
-            <button
-              key={m.value}
-              onClick={() => setPaymentMethod(m.value)}
-              className={clsx(
-                'flex items-center justify-center gap-1.5 h-11 rounded-xl border-2 text-sm font-medium transition-all',
-                paymentMethod === m.value
-                  ? 'border-brand-600 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300'
-                  : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-600 dark:text-slate-300 hover:border-gray-300 dark:hover:border-slate-600'
-              )}
-            >
-              <m.Icon className="w-4 h-4" /> {m.label}
-            </button>
-          ))}
-        </div>
 
         {/* Notes toggle */}
         <button

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Sparkles, BarChart3, Target, Shield, Globe, Zap,
   ArrowRight, CheckCircle2, MessageSquareHeart, PieChart,
-  TrendingUp, Wallet, Bell, RefreshCw,
+  TrendingUp, Wallet, Bell,
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
@@ -717,9 +717,8 @@ export default function Landing() {
             </div>
             <span className="font-bold text-gray-700"><span className="text-brand-600">V</span>expense</span>
           </div>
-          <p className="text-xs text-gray-400 text-center flex items-center gap-1.5">
-            <RefreshCw className="w-3 h-3 text-gray-300" />
-            Built with Claude AI · © {new Date().getFullYear()} Vexpense
+          <p className="text-xs text-gray-400 text-center">
+            © {new Date().getFullYear()} Vexpense. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs text-gray-400">
             <button onClick={() => navigate('/login')}    className="hover:text-gray-700 transition-colors">Sign in</button>

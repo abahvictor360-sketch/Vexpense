@@ -1,0 +1,21 @@
+import { Router } from 'express';
+import { adminAuth } from '../../middleware/adminAuth';
+import authRouter from './auth';
+import statsRouter from './stats';
+import usersRouter from './users';
+import txRouter from './transactions';
+import aiRouter from './ai';
+import notifRouter from './notifications';
+import systemRouter from './system';
+import settingsRouter from './settings';
+
+const router = Router();
+router.use('/auth', authRouter);
+router.use('/stats', adminAuth, statsRouter);
+router.use('/users', adminAuth, usersRouter);
+router.use('/transactions', adminAuth, txRouter);
+router.use('/ai', adminAuth, aiRouter);
+router.use('/notifications', adminAuth, notifRouter);
+router.use('/system', adminAuth, systemRouter);
+router.use('/settings', adminAuth, settingsRouter);
+export default router;

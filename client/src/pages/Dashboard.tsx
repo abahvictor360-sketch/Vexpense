@@ -12,6 +12,7 @@ import { formatCurrency, getGreeting, getInitials, getMonthRange, calculateBreak
 import { clsx } from '../utils/clsx';
 import { useCategoryStore } from '../store/categoryStore';
 import { useTheme } from '../store/themeStore';
+import { CategoryIcon } from '../components/ui/CategoryIcon';
 
 type Period = 'week' | 'month' | 'quarter';
 
@@ -37,17 +38,18 @@ export default function Dashboard() {
   const [period, setPeriod] = useState<Period>('month');
   const [insight, setInsight] = useState<string | null>(null);
   const [insightLoading, setInsightLoading] = useState(false);
+  const [insightTouched, setInsightTouched] = useState(false);
 
   useEffect(() => { if (user?.id) fetchGoals(user.id); }, [user?.id]);
-  useEffect(() => { loadInsight(); }, []);
 
   const loadInsight = async () => {
+    setInsightTouched(true);
     setInsightLoading(true);
     try {
       const { insight } = await getInsight();
       setInsight(insight);
     } catch {
-      setInsight('Unable to load AI insight right now. Try again later.');
+      setInsight('AI insights require the backend server. Coming soon once deployed.');
     } finally {
       setInsightLoading(false);
     }
@@ -251,11 +253,15 @@ export default function Dashboard() {
                   <div className="skeleton h-3 w-5/6 rounded-md" />
                   <div className="skeleton h-3 w-4/6 rounded-md" />
                 </div>
-              ) : (
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  <span className="font-semibold text-gray-900">AI Insight: </span>
-                  {insight ?? 'Analyzing your spending patterns...'}
+              ) : insightTouched ? (
+                <p className="text-sm text-gray-700 dark:text-slate-300 leading-relaxed">
+                  <span className="font-semibold text-gray-900 dark:text-white">AI Insight: </span>
+                  {insight}
                 </p>
+              ) : (
+                <button onClick={loadInsight} className="text-sm text-brand-600 dark:text-brand-400 font-medium hover:underline text-left">
+                  Tap to load AI insight for your spending
+                </button>
               )}
             </div>
           </div>
@@ -290,12 +296,12 @@ export default function Dashboard() {
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-card divide-y divide-gray-50 dark:divide-slate-700">
             {breakdown.map(({ category, amount, count, percentage }) => (
               <div key={category.id} className="flex items-center gap-3 px-4 py-3">
-                {/* Emoji icon */}
+                {/* Category icon */}
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                  style={{ backgroundColor: `${category.color}18` }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: `${category.color}20` }}
                 >
-                  {category.icon}
+                  <CategoryIcon icon={category.icon} size="md" color={category.color} />
                 </div>
 
                 {/* Name + count */}

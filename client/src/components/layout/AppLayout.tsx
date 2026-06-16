@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { Toaster } from 'react-hot-toast';
@@ -7,9 +7,11 @@ import { useEffect } from 'react';
 import { useExpenseStore } from '../../store/expenseStore';
 import { useBudgetStore } from '../../store/budgetStore';
 import { useCategoryStore } from '../../store/categoryStore';
+import { PWAInstallBanner } from '../ui/PWAInstallBanner';
 
 export function AppLayout() {
   const { user } = useAuthStore();
+  const location = useLocation();
   const fetchExpenses   = useExpenseStore(s => s.fetchExpenses);
   const fetchBudgets    = useBudgetStore(s => s.fetchBudgets);
   const fetchCategories = useCategoryStore(s => s.fetchCategories);
@@ -27,12 +29,13 @@ export function AppLayout() {
       <Sidebar />
 
       <main className="flex-1 lg:ml-60 min-h-screen">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6 pb-24 lg:pb-8">
+        <div key={location.pathname} className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-6 pb-24 lg:pb-8 page-enter">
           <Outlet />
         </div>
       </main>
 
       <BottomNav />
+      <PWAInstallBanner />
 
       <Toaster
         position="top-center"
